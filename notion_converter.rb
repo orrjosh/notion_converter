@@ -2,26 +2,26 @@
 require 'shellwords'
 require 'pry'
 
-def walk_tree(directory, target_dir)
+def walk_tree(directory, export_dir, target_dir)
     puts "Directory arg #{directory}"
     Dir.chdir(directory)
-    puts "working dir #{Dir.pwd}"
     arr = Dir.entries(Dir.pwd)
     arr.each do |fs_obj|
         if(fs_obj.start_with?('.')) 
-            puts "skipping hidden dir #{fs_obj}"
+            # puts "skipping hidden dir #{fs_obj}"
         elsif fs_obj.end_with?('.md')
-            puts "convert this #{fs_obj}"
+            # puts "convert this #{fs_obj}"
         elsif fs_obj.end_with?('.csv') || fs_obj.end_with?('.png')
-            puts "copy this #{fs_obj}"
+            # puts "copy this #{fs_obj}"
         elsif File.directory?("#{directory}/#{fs_obj}")
-            puts "this is a dir #{fs_obj}"
+            # puts "this is a dir #{fs_obj}"
             target_path = "#{directory}/#{fs_obj}"
-            target_path = target_path.gsub(directory, target_dir)
-
-            system("mkdir -p \"./#{target_path}\"")
+            target_path = target_path.gsub(export_dir, target_dir)
+            puts("export dir", export_dir)
+            puts("target path #{target_path}")
+            system("mkdir -p \"#{target_path}\"")
             begin
-                walk_tree("#{directory}/#{fs_obj}", target_dir)
+                walk_tree("#{directory}/#{fs_obj}", export_dir, target_dir)
             rescue Exception => ex
                 puts ex
             end
@@ -44,11 +44,13 @@ if ARGV.length < 2
     exit
 end
 
-export_dir = "#{Dir.pwd}/#{ARGV[0]}"
+export_dir = ARGV[0]
+export_path = "#{Dir.pwd}/#{ARGV[0]}"
 target_dir = ARGV[1]
+#target_dir = "#{Dir.pwd}/#{ARGV[1]}"
 
 #arr = Dir.entries(export_dir)
-walk_tree(export_dir, target_dir)
+walk_tree(export_path, export_dir, target_dir)
 
 
 #Dir.mkdir(target_dir) unless Dir.exists?(target_dir)
