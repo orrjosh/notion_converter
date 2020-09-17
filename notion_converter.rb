@@ -13,12 +13,12 @@ def walk_tree(directory, export_dir, target_dir)
             # puts "convert this #{fs_obj}"
         elsif fs_obj.end_with?('.csv') || fs_obj.end_with?('.png')
             # puts "copy this #{fs_obj}"
+
         elsif File.directory?("#{directory}/#{fs_obj}")
             # puts "this is a dir #{fs_obj}"
-            target_path = "#{directory}/#{fs_obj}"
-            target_path = target_path.gsub(export_dir, target_dir)
-            puts("export dir", export_dir)
-            puts("target path #{target_path}")
+            target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
+           # target_path = "#{directory}/#{fs_obj}"
+            #target_path = target_path.gsub(export_dir, target_dir)
             system("mkdir -p \"#{target_path}\"")
             begin
                 walk_tree("#{directory}/#{fs_obj}", export_dir, target_dir)
@@ -33,6 +33,11 @@ end
 
 def convert(file_path)
 #use pandoc command to convert markdown to docx
+end
+
+def build_output_path(current_directory, fs_obj_name, export_dir, target_dir)
+    target_path = "#{current_directory}/#{fs_obj_name}"
+    target_path = target_path.gsub(export_dir, target_dir)
 end
 
 def copy_to_converted(file_path, converted_dir)

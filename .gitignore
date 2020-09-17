@@ -1,2 +1,5 @@
 .DS_Store
 notion_export
+.bundle/
+log.txt
+vendor/
