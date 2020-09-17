@@ -18,7 +18,8 @@ def walk_tree(directory, target_dir)
             puts "this is a dir #{fs_obj}"
             target_path = "#{directory}/#{fs_obj}"
             target_path = target_path.gsub(directory, target_dir)
-            system("mkdir -p \"#{target_path}\"")
+
+            system("mkdir -p \"./#{target_path}\"")
             begin
                 walk_tree("#{directory}/#{fs_obj}", target_dir)
             rescue Exception => ex
