@@ -13,12 +13,13 @@ def walk_tree(directory, export_dir, target_dir)
             # puts "convert this #{fs_obj}"
         elsif fs_obj.end_with?('.csv') || fs_obj.end_with?('.png')
             # puts "copy this #{fs_obj}"
+            target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
+            system("cp \"#{directory}/#{fs_obj}\" \"#{target_path}\"")
+            puts("cp #{directory}/#{fs_obj} #{target_path}")
 
         elsif File.directory?("#{directory}/#{fs_obj}")
             # puts "this is a dir #{fs_obj}"
             target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
-           # target_path = "#{directory}/#{fs_obj}"
-            #target_path = target_path.gsub(export_dir, target_dir)
             system("mkdir -p \"#{target_path}\"")
             begin
                 walk_tree("#{directory}/#{fs_obj}", export_dir, target_dir)

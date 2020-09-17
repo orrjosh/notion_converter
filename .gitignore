@@ -3,3 +3,4 @@ notion_export
 .bundle/
 log.txt
 vendor/
+notion_converted
