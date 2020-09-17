@@ -7,19 +7,21 @@ def walk_tree(directory, export_dir, target_dir)
     Dir.chdir(directory)
     arr = Dir.entries(Dir.pwd)
     arr.each do |fs_obj|
+        target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
         if(fs_obj.start_with?('.')) 
             # puts "skipping hidden dir #{fs_obj}"
         elsif fs_obj.end_with?('.md')
             # puts "convert this #{fs_obj}"
+            puts("target convert path", target_path)
+            Dir.chdir(directory)
+            system("pandoc \"#{fs_obj}\" --output=\"#{target_path}.docx\" -f markdown -w docx")
+            puts("pandoc \"#{directory}/#{fs_obj}\" --output=\"#{target_path}\.docx" -f markdown -w docx")
+
         elsif fs_obj.end_with?('.csv') || fs_obj.end_with?('.png')
             # puts "copy this #{fs_obj}"
-            target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
             system("cp \"#{directory}/#{fs_obj}\" \"#{target_path}\"")
-            puts("cp #{directory}/#{fs_obj} #{target_path}")
-
         elsif File.directory?("#{directory}/#{fs_obj}")
             # puts "this is a dir #{fs_obj}"
-            target_path = build_output_path(directory, fs_obj, export_dir, target_dir)
             system("mkdir -p \"#{target_path}\"")
             begin
                 walk_tree("#{directory}/#{fs_obj}", export_dir, target_dir)
